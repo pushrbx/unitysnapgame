@@ -6,10 +6,14 @@ namespace SnapGameLogic.Abstractions
     {
         ISlapjackGame CurrentGame { get; }
 
-        MonoBehaviour ViewModel { get; }
+        IUnitySnapBehavior ViewModel { get; }
 
         bool StartNewGame();
 
         bool AbortCurrentGame();
+
+        bool OnUserClickedOnHisDeck(ICardGamePlayer player);
+
+        bool FlushRenderQueue(IUnitySnapBehavior targetViewModel);
     }
 }

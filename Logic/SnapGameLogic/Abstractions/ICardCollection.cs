@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SnapGameLogic.Abstractions
 {
     /// <summary>
     /// An interface which represents a Deck of cards.
     /// </summary>
-    public interface ICardCollection
+    public interface ICardCollection : ICollection<ICardObject>
     {
         bool GenerateCards();
 
         bool ShuffleCards();
 
-        ICardObject GetNextCard();
+        ICardObject PopNextCard();
     }
 }

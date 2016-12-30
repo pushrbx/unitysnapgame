@@ -6,10 +6,10 @@ using System.Text;
 
 namespace SnapGameLogic.Abstractions
 {
-    public interface ICardType : IEquatable<ICardType>
+    public interface ICardCollectionFactory
     {
-        string Name { get; }
+        ICardCollection CreateFaceDownPile();
 
-        int Value { get; }
+        ICardCollection CreateEmptyFaceUpPile();
     }
 }
