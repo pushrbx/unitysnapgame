@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Autofac;
+﻿using Autofac;
 using SnapGameLogic.Abstractions;
 using SnapGameLogic.Cards;
 using SnapGameLogic.Internal;
@@ -28,17 +24,25 @@ namespace SnapGameLogic
                 _gameContextContainer = CreateGameContextContainer(viewModel);
             }
 
-            return _gameContextContainer.Resolve<IGameController>();
+            using (var scope = _gameContextContainer.BeginLifetimeScope())
+                return scope.Resolve<IGameController>();
         }
 
         private static IContainer CreateGameContextContainer(IUnitySnapBehavior viewModel)
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterInstance(viewModel);
+            builder.RegisterInstance(viewModel).As<IUnitySnapBehavior>();
             builder.RegisterType<FrenchCardCollectionFactory>().As<ICardCollectionFactory>();
+            builder.RegisterType<DefaultCardDealerLogic>().As<ICardDealerLogic>();
+            builder.RegisterType<DefaultSnapGameType>().As<ISlapjackGame>();
             builder.RegisterType<DefaultGameController>().As<IGameController>();
-            builder.RegisterType<DefaultSlapGameType>().As<ISlapjackGame>();
+            builder.RegisterType<DefaultGameTurnManager>().As<IGameTurnManager>();
+            builder.RegisterType<DefaultPlayerTurnManager>().As<IPlayerTurnManager>();
+            builder.RegisterType<FrenchCardObjectFactory>().As<ICardObjectFactory>();
+            builder.RegisterType<DefaultCardSpriteFactory>().As<ICardSpriteFactory>();
+            builder.RegisterType<DefaultCardTypeDescriptor>().As<ICardTypeDescriptor>();
+            builder.RegisterType<DefaultCardTypeTextureResolver>().As<ICardTypeTextureResolver>();
 
             return builder.Build();
         }

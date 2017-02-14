@@ -10,13 +10,15 @@ namespace SnapGameLogic
 {
     public class Player : ICardGamePlayer
     {
-        public Player(string name, ICardCollectionFactory cardCollectionFactory)
+        public Player(string name, ICardCollection faceDownPile, ICardCollection faceUpPile)
         {
-            Check.NotNull(cardCollectionFactory, "cardCollectionFactory");
+            Check.NotNull(faceDownPile, "faceDownPile");
+            Check.NotNull(faceUpPile, "faceUpPile");
+
             Name = name;
 
-            FaceDownPile = cardCollectionFactory.CreateFaceDownPile();
-            FaceUpPile = cardCollectionFactory.CreateEmptyFaceUpPile();
+            FaceDownPile = faceDownPile;
+            FaceUpPile = faceUpPile;
         }
 
         public int Score { get; set; }

@@ -11,10 +11,8 @@ namespace SnapGameLogic.Abstractions
     /// </summary>
     public interface ICardCollection : ICollection<ICardObject>
     {
-        bool GenerateCards();
-
-        bool ShuffleCards();
-
         ICardObject PopNextCard();
+
+        ICardType ContentType { get; }
     }
 }

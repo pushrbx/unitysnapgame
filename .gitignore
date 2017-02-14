@@ -18,6 +18,7 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
+*.pdb
 
 
 # Unity3D generated meta files
@@ -25,6 +26,8 @@ ExportedObj/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+*.meta
+*.mdb
 
 # Builds
 *.apk

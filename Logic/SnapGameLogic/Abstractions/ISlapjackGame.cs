@@ -8,5 +8,9 @@ namespace SnapGameLogic.Abstractions
     public interface ISlapjackGame
     {
         IList<ICardGamePlayer> Players { get; }
+
+        int PlayerCount { get; }
+
+        ICardDealerLogic DealingLogic { get; }
     }
 }

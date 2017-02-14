@@ -1,17 +1,33 @@
 ﻿using System;
+using System.Linq;
 using SnapGameLogic.Abstractions;
 using UnityEngine;
 
 namespace SnapGameLogic
 {
+    [RequireComponent(typeof(Canvas))]
     public class SnapGameViewModel : MonoBehaviour, IUnitySnapBehavior
     {
         // the current game's controller object
         private IGameController m_gameController;
+        private SpriteRenderer m_renderer;
+
+        [SerializeField] private Canvas m_rootCanvas;
+
+        public SpriteRenderer GameRenderer
+        {
+            get { return m_renderer ?? (m_renderer = GetComponent<SpriteRenderer>()); }
+        }
+
+        public void AddGameObjectToScene(GameObject object2Spawn)
+        {
+            ThrowIfGameObjectNull(gameObject, "object2Spawn");
+            Instantiate(object2Spawn);
+        }
 
         public bool TurnUpCard(ICardObject card)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public Vector3 GetPositionOfGameObjectByName(string objName)
@@ -35,10 +51,15 @@ namespace SnapGameLogic
             return go.transform.localRotation;
         }
 
-        public void Start()
+        void Awake()
         {
             m_gameController = SnapGameContext.GetGameController(this);
             m_gameController.StartNewGame();
+        }
+
+        public void Update()
+        {
+            m_gameController.FlushRenderQueue(this);
         }
 
         private GameObject FindGameObject(string objName)
@@ -51,6 +72,11 @@ namespace SnapGameLogic
         {
             if (go == null) // todo: custom exception class
                 throw new Exception(string.Format("Couldn't find gameobject in the hiearchy with name/path '{0}'", objName));
+        }
+
+        public void OnPlayerOneCardHasBeenClicked()
+        {
+            m_gameController.OnUserClickedOnHisDeck(m_gameController.CurrentGame.Players.FirstOrDefault());
         }
     }
 }

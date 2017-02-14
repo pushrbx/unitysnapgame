@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace SnapGameLogic.Abstractions
 {
-    public interface ICardCollectionFactory
+    public interface ICardObjectFactory
     {
-        ICardCollection CreateCardCollection();
+        ICardObject CreateCardObject(ICardType type);
     }
 }

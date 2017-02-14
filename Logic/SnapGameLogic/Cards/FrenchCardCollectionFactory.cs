@@ -9,16 +9,7 @@ namespace SnapGameLogic.Cards
 {
     public class FrenchCardCollectionFactory : ICardCollectionFactory
     {
-        public ICardCollection CreateFaceDownPile()
-        {
-            var cardCollection = new FrenchCardCollection();
-            cardCollection.GenerateCards();
-            cardCollection.ShuffleCards();
-
-            return cardCollection;
-        }
-
-        public ICardCollection CreateEmptyFaceUpPile()
+        public ICardCollection CreateCardCollection()
         {
             return new FrenchCardCollection();
         }

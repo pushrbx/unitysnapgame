@@ -10,10 +10,11 @@ namespace SnapGameLogic
     public class DefaultGameController : IGameController
     {
         private readonly IGameTurnManager m_turnManager;
-        private readonly Queue<RenderModel> m_renderQueue;
+        private readonly Queue<GameObject> m_renderQueue;
         private readonly Dictionary<ICardGamePlayer, GameObjectTransformModel> m_playerDeckLocations;
 
-        public DefaultGameController(IUnitySnapBehavior viewModel, IGameTurnManager turnManager, ISlapjackGame game)
+        public DefaultGameController(IUnitySnapBehavior viewModel,
+            IGameTurnManager turnManager, ISlapjackGame game)
         {
             Check.NotNull(viewModel, "viewModel");
             Check.NotNull(turnManager, "turnManager");
@@ -23,7 +24,7 @@ namespace SnapGameLogic
             ViewModel = viewModel;
             CurrentGame = game;
 
-            m_renderQueue = new Queue<RenderModel>();
+            m_renderQueue = new Queue<GameObject>();
             m_playerDeckLocations = new Dictionary<ICardGamePlayer, GameObjectTransformModel>();
         }
 
@@ -85,25 +86,16 @@ namespace SnapGameLogic
             // we do this later, for now we work with static decks which are not changing on screeen.
         }
 
-        private void AddGameObjectToRenderQueue(GameObject gameObject, Vector3 position, Quaternion rotation, Vector3 scale)
-        {
-            var model = new RenderModel()
-            {
-                ObjectToRender = gameObject,
-                TransformModel = new GameObjectTransformModel()
-                {
-                    Position = position,
-                    Rotation = rotation,
-                    Scale = scale
-                }
-            };
-
-            m_renderQueue.Enqueue(model);
-        }
-
         private void AddGameObjectToRenderQueue(Sprite sprite, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            var go =
+            var go = UnityEngine.Object.Instantiate(new GameObject());
+            var spriteRenderer = go.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = sprite;
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+            go.transform.localScale = scale;
+
+            m_renderQueue.Enqueue(go);
         }
 
         private void AddPlayerDeckLocation(ICardGamePlayer player, Vector3 position, Quaternion rotation, Vector3 scale)
@@ -136,18 +128,16 @@ namespace SnapGameLogic
         private bool TurnUpCard(ICardObject card, GameObjectTransformModel deckTransformModel)
         {
             AddGameObjectToRenderQueue(card.CardGraphic, deckTransformModel.Position + new Vector3(25, 0), deckTransformModel.Rotation, deckTransformModel.Scale);
+
+            return true;
         }
 
         public bool FlushRenderQueue(IUnitySnapBehavior targetViewModel)
         {
-            throw new NotImplementedException();
-        }
+            while (m_renderQueue.Count > 0)
+                targetViewModel.AddGameObjectToScene(m_renderQueue.Dequeue());
 
-        private class RenderModel
-        {
-            public GameObject ObjectToRender { get; set; }
-
-            public GameObjectTransformModel TransformModel { get; set; }
+            return true;
         }
 
         private class GameObjectTransformModel

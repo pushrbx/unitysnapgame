@@ -31,5 +31,9 @@ namespace SnapGameLogic.Abstractions
         /// <param name="name"></param>
         /// <returns></returns>
         Quaternion GetRotationOfGameObjectByName(string name);
+
+        SpriteRenderer GameRenderer { get; }
+
+        void AddGameObjectToScene(GameObject object2Spawn);
     }
 }
